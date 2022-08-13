@@ -1,5 +1,6 @@
 const { hashPassword } = require("../helpers/authHelper");
 const User = require("../models/User");
+const jwt = require('jsonwebtoken');
 
 async function register(name, email, password) {
      const existingEmail = await User.findOne({
@@ -23,7 +24,27 @@ async function register(name, email, password) {
   }
 
 
+  async function createToken(user){
+
+    const payload = {
+          _id: user._id,
+        };
+  
+    const token = jwt.sign(
+      payload,
+      process.env.SECRET,
+      {
+        expiresIn: "2h",
+      }
+    );
+  
+    payload.token = token;
+  
+    return payload;
+  }
+
   module.exports = {
     register,
+    createToken,
   };
   
