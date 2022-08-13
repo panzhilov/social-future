@@ -24,6 +24,20 @@ const userSchema = new mongoose.Schema({
   followers: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
 });
 
+
+
+  userSchema.index(
+    { email: 1 },
+    {
+      collation: {
+        locale: "en",
+        strength: 1,
+      },
+    }
+  );
+  
+
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
