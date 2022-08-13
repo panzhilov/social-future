@@ -1,16 +1,29 @@
 import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [ok, setOk] = useState(false);
 
-  const handleSubmit = e =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(1);
-  }
+    try {
+      const { data } = await axios.post("http://localhost:3030/api/register", {
+        name,
+        email,
+        password,
+        repeatPassword,
+      });
+      setOk(data.ok)
+    } catch (err) {
+      toast.error(err.response.data);
+    }
+  };
 
   return (
     <div className="container-fluid">
@@ -31,6 +44,8 @@ const Register = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 type="text"
+                name="name"
+                id="name"
                 className="form-control"
                 placeholder="Enter your name"
               />
@@ -44,6 +59,8 @@ const Register = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
+                name="email"
+                id="email"
                 className="form-control"
                 placeholder="Enter your email"
               />
@@ -57,6 +74,8 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
+                name="password"
+                id="password"
                 className="form-control"
                 placeholder="Enter your password"
               />
@@ -67,9 +86,11 @@ const Register = () => {
                 <label className="text-muted">Repeat Password</label>
               </small>
               <input
-                value={repeatPassword}
+                alue={repeatPassword}
                 onChange={(e) => setRepeatPassword(e.target.value)}
                 type="password"
+                name="repeatPassword"
+                id="repeatPassword"
                 className="form-control"
                 placeholder="Repeat your password"
               />
