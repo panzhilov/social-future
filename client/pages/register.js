@@ -1,25 +1,29 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { Modal } from 'antd';
+import Link from 'next/link';
+Modal
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [ok, setOk] = useState(false);
+  console.log(ok);
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post("http://localhost:3030/api/register", {
+      await axios.post("http://localhost:3030/api/register", {
         name,
         email,
         password,
         repeatPassword,
       });
-      setOk(data.ok)
+      setOk(true)
     } catch (err) {
       toast.error(err.response.data);
     }
@@ -100,6 +104,22 @@ const Register = () => {
               <button className="btn btn-primary ">Submit</button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col">
+          <Modal
+          title="Congratulations!"
+          visible={ok}
+          onCancel={() => setOk(false)}
+          footer={null}
+          >
+            <p>You have succsefully registred.</p>
+            <Link href="/login">
+              <a className="btn btn-primary btn-sm">Login</a>
+            </Link>
+          </Modal>
         </div>
       </div>
     </div>
