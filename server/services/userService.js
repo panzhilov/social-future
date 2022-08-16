@@ -38,9 +38,7 @@ async function register(name, email, password) {
       }
     );
   
-    payload.token = token;
-  
-    return payload;
+    return token;
   }
 
   module.exports = {
