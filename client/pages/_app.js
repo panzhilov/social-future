@@ -1,3 +1,4 @@
+import {UserProvider} from '../context/index'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navigation from '../components/Navigation';
 import Head from 'next/head';
@@ -7,8 +8,8 @@ import 'antd/dist/antd.css'
 
 function MyApp({ Component, pageProps }) {
     return(
-    <>
-
+   
+    <UserProvider>
         <Head>
             <link rel="stylesheet" href="/css/styles.css" />
         </Head>
@@ -16,7 +17,7 @@ function MyApp({ Component, pageProps }) {
         <Navigation />
         <ToastContainer position='top-right' />
         <Component {...pageProps} />
-    </>
+        </ UserProvider>
     );
   }
 
