@@ -3,8 +3,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Modal } from "antd";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { UserContext } from "../context";
+import { useRouter } from "next/router";
 
 import AuthForm from "../components/forms/AuthForm";
 
@@ -13,9 +13,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
-
   const [state, setState] = useContext(UserContext);
+
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,28 +23,30 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const result = await axios.post(`${process.env.NEXT_PUBLIC_API}/login`, {
+      const result = await axios.post(`/login`, {
         email,
         password,
       });
-      setLoading(false);
-      // console.log(result.data);
 
       //update context
       setState({
         user: result.data.user,
         token: result.data.token,
       });
-
+      
       //save in local storage
       localStorage.setItem('user', JSON.stringify(result.data));
-
-      // useRouter().push('/')
+      setLoading(false);
+      router.push('/')
     } catch (err) {
       setLoading(false);
-      toast.error(err.response);
+      toast.error(err.response.data);
     }
   };
+
+  if(state && state.token){
+    router.push('/');
+  }
 
   return (
     <div className="container-fluid">
