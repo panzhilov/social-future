@@ -5,3 +5,11 @@ nav{
 .info-box{
     background-color: #457b9d;
 }
+
+.logo{
+    text-shadow: 2.5px 2.5px #1d3557;
+}
+
+.active{
+    background-color: #1d3557;
+}
