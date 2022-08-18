@@ -1,7 +1,7 @@
 import { Avatar } from "antd";
 import { CameraOutlined, LoadingOutlined } from "@ant-design/icons";
 
-const CreatePostForm = ({
+const PostForm = ({
   content,
   setContent,
   onSubmit,
@@ -42,4 +42,4 @@ const CreatePostForm = ({
   );
 };
 
-export default CreatePostForm;
+export default PostForm;
