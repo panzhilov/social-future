@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import UserRoute from "../../components/routes/userRoute";
 import { UserContext } from "../../context";
-import CreatePostForm from "../../components/forms/CreatePostForm.js";
+import PostForm from "../../components/forms/PostForm.js";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -72,6 +72,22 @@ const Home = () => {
     }
   };
 
+  const handleDelete = async (post) => {
+    try {
+      const answer = window.confirm('Are you sure delete this post?')
+
+      if(!answer) {
+        return;
+      }
+      
+      const {data} = await axios.delete(`/delete-post/${post._id}`);
+      toast.error('Post deleted')
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <UserRoute>
       <div className="container-fluid">
@@ -83,7 +99,7 @@ const Home = () => {
 
         <div className="row py-3">
           <div className="col-md-8">
-            <CreatePostForm
+            <PostForm
               content={content}
               setContent={setContent}
               onSubmit={onSubmit}
@@ -92,7 +108,7 @@ const Home = () => {
               image={image}
             />
             <br />
-            <PostList posts={posts} />
+            <PostList posts={posts} handleDelete={handleDelete} />
           </div>
 
           <div className="col-md-4">Sidebar</div>
