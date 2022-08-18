@@ -29,7 +29,6 @@ async function createPost(req, res) {
 async function imageUpload(req, res){
     try {
         const result = await cloudinary.uploader.upload(req.files.image.path);
-        console.log('uploaded url', result);
         res.json({
             url: result.secure_url, //https
             public_id: result.public_id
@@ -39,8 +38,23 @@ async function imageUpload(req, res){
     }
 }
 
+async function postsByUser(req,res){
+    
+    try {
+        // const posts = await Post.find({author: req.auth._id})
+        const posts = await Post.find()
+        .populate('author', '_id name image')
+        .sort({createdAt: -1})
+        .limit(10);
+    //    console.log(posts);
+        res.json(posts);
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 module.exports = {
     createPost,
-    imageUpload
+    imageUpload,
+    postsByUser
   };
