@@ -1,6 +1,7 @@
 const { hashPassword } = require("../helpers/authHelper");
 const User = require("../models/User");
 const jwt = require('jsonwebtoken');
+const uniqid = require('uniqid');
 
 async function register(name, email, password) {
      const existingEmail = await User.findOne({
@@ -16,7 +17,8 @@ async function register(name, email, password) {
     const user = new User({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      username: uniqid()
     });
   
  
