@@ -41,7 +41,7 @@ const Navigation = () => {
               {state.user.name}
             </a>
 
-            <ul class="dropdown-menu">
+            <ul className="dropdown-menu">
               <li>
                 <Link href="/user/dashboard">
                   <a
