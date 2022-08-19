@@ -37,7 +37,7 @@ const Login = () => {
       //save in local storage
       localStorage.setItem('user', JSON.stringify(result.data));
       setLoading(false);
-      router.push('/')
+      router.push('/user/dashboard')
     } catch (err) {
       setLoading(false);
       toast.error(err.response.data);
@@ -45,7 +45,7 @@ const Login = () => {
   };
 
   if(state && state.token){
-    router.push('/');
+    router.push('/user/dashboard');
   }
 
   return (
