@@ -24,7 +24,7 @@ const postSchema = new mongoose.Schema(
       {
         text: String,
         created: { type: Date, default: Date.now },
-        commentAuthor: {
+        author: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
         },

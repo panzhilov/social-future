@@ -27,6 +27,23 @@ const PostComments = () => {
     }
   };
 
+  const removeComment = async (postId, comment) => {
+    let answer = window.confirm("Are you sure ?")
+    if(!answer){
+      return;
+    }
+    try {
+      const { data } = await axios.put("/remove-comment", {
+        postId,
+        comment,
+      });
+      console.log('comment removed', data);
+      fetchPost()
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div className="container-fluid">
@@ -35,13 +52,15 @@ const PostComments = () => {
             <h1>Social Furutre</h1>
           </div>
         </div>
-       <div className="container col-md-8 offset-md-2 pt-5">
-        <Post post={post} />
-       </div>
+        <div className="container col-md-8 offset-md-2 pt-5">
+          <Post post={post} commentsCount={50} removeComment={removeComment} />
+        </div>
 
-       <Link href="/user/dashboard">
-        <a className="d-flex justify-content-center p-5"><RollbackOutlined /></a>
-       </Link>
+        <Link href="/user/dashboard">
+          <a className="d-flex justify-content-center p-5">
+            <RollbackOutlined />
+          </a>
+        </Link>
       </div>
     </>
   );

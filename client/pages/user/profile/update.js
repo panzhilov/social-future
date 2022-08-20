@@ -14,8 +14,6 @@ const ProfileUpdate = () => {
   const [about, setAbout] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
   const [ok, setOk] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -37,18 +35,27 @@ if(state && state.user) {
     try {
       setLoading(true);
 
-      const result = await axios.put(`/profile-update`,
+      const {data} = await axios.put(`/profile-update`,
         {
           username,
           about,
           name,
           email,
-          password,
-          repeatPassword,
         }
       );
-      setLoading(false);
-      setOk(true);
+     
+      if(data.error) {
+        toast.error(data.error)
+        setLoading(false)
+      }else{
+        let auth = JSON.parse(localStorage.getItem('user'));
+        auth.user = data;
+        localStorage.setItem('user', JSON.stringify(auth));
+        setState({...state, user: data})
+
+        setOk(true)
+        setLoading(false)
+      }
     } catch (err) {
       setLoading(false);
       toast.error(err.response.data);
@@ -76,10 +83,6 @@ if(state && state.user) {
             setName={setName}
             email={email}
             setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
-            repeatPassword={repeatPassword}
-            setRepeatPassword={setRepeatPassword}
             loading={loading}
           />
         </div>
@@ -93,21 +96,8 @@ if(state && state.user) {
             onCancel={() => setOk(false)}
             footer={null}
           >
-            <p>You have succsefully registred.</p>
-            <Link href="/login">
-              <a className="btn btn-primary btn-sm">Login</a>
-            </Link>
+            <p>You have succsefully updated your profile.</p>
           </Modal>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <p className="text-center">
-            Already registered?{" "}
-            <Link href="/login">
-              <a>Login</a>
-            </Link>
-          </p>
         </div>
       </div>
     </div>

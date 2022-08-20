@@ -53,7 +53,9 @@ async function postsByUser(req, res) {
 
 async function userPost(req, res) {
   try {
-    const post = await Post.findById(req.params._id);
+    const post = await Post.findById(req.params._id)
+    .populate("author", "_id name")
+    .populate("comments.author", "_id name");
     res.json(post);
   } catch (err) {
     console.log(err);
@@ -61,8 +63,6 @@ async function userPost(req, res) {
 }
 
 async function updatePost(req, res) {
-  //    console.log('post update controle', req.body)
-
   try {
     const post = await Post.findByIdAndUpdate(req.params._id, req.body, {
       new: true,
@@ -74,18 +74,81 @@ async function updatePost(req, res) {
 }
 
 async function deletePost(req, res) {
-    try {
-        const post = await Post.findByIdAndDelete(req.params._id);
+  try {
+    const post = await Post.findByIdAndDelete(req.params._id);
 
-        //remove the image from clodinary
-        if(post.image && post.image.public_id) {
-            const image = await cloudinary.uploader.destroy(post.image.public_id);
-        }
-        res.json({ok: true})
-    } catch (err) {
-        console.log(err);
+    if (post.image && post.image.public_id) {
+      const image = await cloudinary.uploader.destroy(post.image.public_id);
     }
+    res.json({ ok: true });
+  } catch (err) {
+    console.log(err);
+  }
 }
+
+async function likePost(req, res) {
+  try {
+    const post = await Post.findByIdAndUpdate(
+      req.body._id,
+      {
+        $addToSet: { likes: req.auth._id },
+      },
+      { new: true }
+    );
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function unlikePost(req, res) {
+  try {
+    const post = await Post.findByIdAndUpdate(
+      req.body._id,
+      {
+        $pull: { likes: req.auth._id },
+      },
+      { new: true }
+    );
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function addComment(req, res) {
+  try {
+    const { postId, comment } = req.body;
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: { comments: { text: comment, author: req.auth._id } },
+      },
+      { new: true }
+    )
+    .populate('author', "_id name image")
+    .populate('comments.author', '_id name image')
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function removeComment(req, res) {
+    try {
+      const { postId, comment } = req.body;
+      const post = await Post.findByIdAndUpdate(
+        postId,
+        {
+          $pull: { comments: { _id: comment._id } },
+        },
+        { new: true }
+      )
+      res.json(post);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
 module.exports = {
   createPost,
@@ -93,5 +156,9 @@ module.exports = {
   postsByUser,
   userPost,
   updatePost,
-  deletePost
+  deletePost,
+  likePost,
+  unlikePost,
+  addComment,
+  removeComment,
 };

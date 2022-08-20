@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
 import PostList from "../../components/cards/PostList";
-import { Modal } from "antd";
+import { Modal, Pagination } from "antd";
 import CommentForm from "../../components/forms/CommentForm";
 
 const Home = () => {
@@ -120,22 +120,20 @@ const Home = () => {
 
   const addComment = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const {data} = await axios.put('/add-comment', {
+      const { data } = await axios.put("/add-comment", {
         postId: currentPostComment._id,
-        comment
-      })
-      console.log('add comment', data);
-      setComment('');
+        comment,
+      });
+      console.log("add comment", data);
+      setComment("");
       setVisible(false);
       fetchUserPosts();
     } catch (err) {
       console.log(err);
     }
   };
-
-  const removeComment = async () => {};
 
   return (
     <UserRoute>
